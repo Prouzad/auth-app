@@ -1,8 +1,15 @@
 import { NextPage } from 'next';
 import { FormEventHandler, useState } from 'react';
 import { signIn } from 'next-auth/react';
-import { sendCode, verifyCode } from '../api/service/index';
+import { sendCode, verifyCode } from '../pages/api/service/index';
 import axios from 'axios';
+
+const instance = axios.create({
+	baseURL: 'http://185.74.6.18:8181/api/agency/agent/',
+});
+
+instance.post('/verify')
+instance.post('/get-code')
 
 const signin: NextPage = (props): JSX.Element => {
 	// eslint-disable-next-line react-hooks/rules-of-hooks
@@ -29,12 +36,12 @@ const signin: NextPage = (props): JSX.Element => {
 			<form
 				onSubmit={async (e) => {
 					e.preventDefault();
-					setStatus(
-						await axios.post(
-							'http://185.74.6.18:8181/api/agency/agent/send_verification_code/',
-							{ phone_number: userInfo.phone_number }
-						)
+					const res = await axios.post(
+						'http://185.74.6.18:8181/api/agency/agent/send_verification_code/',
+						{ phone_number: userInfo.phone_number }
 					);
+
+					console.log(res);
 				}}
 			>
 				<input
@@ -60,6 +67,7 @@ const signin: NextPage = (props): JSX.Element => {
 							}
 						)
 					);
+					console.log(status);
 				}}
 			>
 				<input

@@ -3,10 +3,21 @@ import Image from 'next/image';
 import { Inter } from 'next/font/google';
 import styles from '@/styles/Home.module.css';
 import { signIn } from 'next-auth/react';
+import { useEffect, useState } from 'react';
+import { sendCode } from './api/service';
+import ModalAuth from '@/components/modal';
 
 const inter = Inter({ subsets: ['latin'] });
 
 export default function Home() {
+	const [isModalShown, setIsModalShown] = useState(false);
+
+	// useEffect(() => {
+	// 	if (!isModalShown) {
+	// 		setIsModalShown(true);
+	// 	}
+	// }, []);
+
 	return (
 		<>
 			<Head>
@@ -18,11 +29,12 @@ export default function Home() {
 			<main className={styles.main}>
 				<button
 					onClick={() => {
-						signIn();
+						setIsModalShown(true)
 					}}
 				>
 					Login
 				</button>
+				{isModalShown && <ModalAuth />}
 			</main>
 		</>
 	);

@@ -1,6 +1,8 @@
 import { NextAuthOptions } from "next-auth"
 import NextAuth from 'next-auth'
 import CredentialsProvider from "next-auth/providers/credentials"
+import axios from 'axios';
+import { sendCodeLink, verifyCode, verifyCodeLink } from "../service";
 
 const authOptions: NextAuthOptions = {
 	session: {
@@ -9,27 +11,22 @@ const authOptions: NextAuthOptions = {
 	providers: [
 		CredentialsProvider({
 			type: 'credentials',
-			credentials: {},
-			authorize(credentials, req) {
-				const { phone_number, security_code } = credentials as {
-					phone_number: string;
-					security_code: string;
-				}
+			credentials: {
+
+			},
+			async authorize(credentials, req) {
+				// creds => phone_number and security_code
+				const res = await verifyCode(credentials)
+
+
+				console.log(res)
 
 				if (true) {
 					throw new Error('invalid credentials')
 				}
-
 			},
 		})
 	],
-
-	pages: {
-		signIn: '/auth/signin',
-		// error: '/auth/signin',
-		// signOut: '/auth/signin',
-	}
-
 }
 
 export default NextAuth(authOptions)
